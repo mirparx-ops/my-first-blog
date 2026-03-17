@@ -14,6 +14,8 @@
             <time>published: {{post.published_date}}</time>
             <h2><a href="">{{post.title}}</a></h2>
             <p>{{post.text|linebreaksbr}}</p>
+            <p>lte: {{post.published_date.lte}}</p>
+            <p> now : {{ timezone.now}}</p>
         </article>
     
         {% endfor %}
