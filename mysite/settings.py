@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog'
+    'diario_alimentare',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'it-IT'
 
-TIME_ZONE = 'Europe/Rome'
+TIME_ZONE = 'Europe/Berlin'
 #TIME_ZONE = 'UTC'
 
 USE_I18N = True
