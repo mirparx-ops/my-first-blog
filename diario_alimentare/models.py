@@ -12,5 +12,9 @@ class Pasto(models.Model):
     def __str__(self):
         return str(self.ora.strftime(format='%d/%m/%Y - %H:%M')) + " " + self.title
 
+    def data(self):
+        return str(self.ora.strftime(format='%d/%m/%Y'))   
 
-# Create your models here.
+    def orario(self):
+        return  str(self.ora.strftime(format='%H:%M'))  
+    # Create your models here.

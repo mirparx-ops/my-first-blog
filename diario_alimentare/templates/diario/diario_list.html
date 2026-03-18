@@ -1,0 +1,17 @@
+<html>
+    <head><h1>Diario Alimentare</h1></head>
+    <body>
+         {% for pasto in pasti %}
+            
+        <article>
+            <h2>Data : {{pasto.data}}  - Ora : {{pasto.orario}} </h2>
+            <h3>Titolo : {{pasto.title}}</h3>
+            <p>Sitauzione : {{pasto.situazione}}</p>
+            <p>Cibo : {{pasto.cibo}}</p>
+            <p>Sensazione : {{pasto.sensazione}}</p>
+        </article>
+        {% endfor %}
+
+
+    </body>
+</html>
