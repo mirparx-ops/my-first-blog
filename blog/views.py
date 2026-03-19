@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Post
 from django.utils import timezone
+from django.shortcuts import render,get_object_or_404
 
 
 def post_list(request):
@@ -11,5 +12,9 @@ def post_list(request):
 
 def post_list_2(request):
     return render(request, 'blog/post_list_2.html', {})
+
+def post_details(request,pk):
+    post= get_object_or_404(Post, pk=pk)
+    return render(request, 'blog/post_details.html', {'post':post})
 
 # Create your views here.

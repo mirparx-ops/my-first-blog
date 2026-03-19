@@ -10,11 +10,15 @@ class Pasto(models.Model):
     sensazione = models.CharField(max_length=150)
 
     def __str__(self):
-        return str(self.ora.strftime(format='%d/%m/%Y - %H:%M')) + " " + self.title
+        correct_time = timezone.localtime(self.ora)
+        return str(correct_time.strftime(format='%d/%m/%Y - %H:%M')) + " " + self.title
 
     def data(self):
-        return str(self.ora.strftime(format='%d/%m/%Y'))   
+        correct_time = timezone.localtime(self.ora)
+        print(correct_time)
+        return str( correct_time.strftime(format='%d/%m/%Y'))   
 
     def orario(self):
-        return  str(self.ora.strftime(format='%H:%M'))  
+        correct_time = timezone.localtime(self.ora)
+        return  str(correct_time.strftime(format='%H:%M'))  
     # Create your models here.
