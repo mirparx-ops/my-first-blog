@@ -9,6 +9,6 @@ def diario_list(request):
     if data_selezionata:
         pasti = Pasto.objects.filter(ora__date=data_selezionata)
     else:
-        pasti = Pasto.objects.all().order_by('ora')
+        pasti = Pasto.objects.all().order_by('-ora')
     # posts = Post.objects.all().order_by('-published_date')
     return render(request, 'diario/diario_list.html', {'pasti':pasti})
