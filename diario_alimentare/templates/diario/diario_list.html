@@ -175,20 +175,34 @@
                                 <div class="meal-note">
                                     <div class="d-flex justify-content-between mb-3">
                                         <span class="meal-title">{{ pasto.title }}</span>
-                                        <span class="badge rounded-pill bg-light text-dark border">{{ pasto.situazione }}</span>
+                                        <span class="meal-title">{{ pasto.ora|time:"H:i" }}</span>
+                                        <span class="badge rounded-pill bg-light text-dark border">{{ pasto.luogo }}</span>
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <span class="label-sepia">Cosa ho mangiato:</span>
+                                        <span class="label-sepia">Cosa ho mangiato ( con quantita'):</span>
                                         <div class="ps-2 fw-bold">{{ pasto.cibo }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="label-sepia">Con chie ero:</span>
+                                        <div class="ps-2 fw-bold">{{ pasto.conChi }}</div>
                                     </div>
 
                                     <div>
-                                        <span class="label-sepia">Come mi sentivo:</span>
+                                        <span class="label-sepia">Come mi sentivo prima:</span>
                                         <div class="handwritten ps-2">
-                                            {{ pasto.sensazione }}
+                                            {{ pasto.come_sento_prima }}
+                                        </div>
+                                        <span class="label-sepia">Come mi sentivo dopo:</span>
+                                        <div class="handwritten ps-2">
+                                            {{ pasto.come_sento_dopo }}
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <span class="label-sepia">Sensazioni fisiche:</span>
+                                        <div class="ps-2 fw-bold">{{ pasto.sensazione}}</div>
+                                    </div>
+
                                 </div>
                             </div>
                             {% endfor %}

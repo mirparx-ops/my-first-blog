@@ -5,9 +5,12 @@ from django.utils import timezone
 class Pasto(models.Model):
     ora = models.DateTimeField(default=timezone.now)
     title  = models.CharField ( default=" ", max_length=100)
-    situazione = models.CharField(max_length=100)   
-    cibo = models.TextField()
-    sensazione = models.CharField(max_length=150)
+    luogo = models.CharField( default="", max_length=100 )
+    cibo = models.TextField(default="")
+    conChi = models.CharField(max_length=100)
+    come_sento_prima = models.TextField(default="")  
+    come_sento_dopo = models.TextField(default="")
+    sensazione = models.CharField(default="",max_length=150, blank=True,null=True)
 
     def __str__(self):
         correct_time = timezone.localtime(self.ora)
