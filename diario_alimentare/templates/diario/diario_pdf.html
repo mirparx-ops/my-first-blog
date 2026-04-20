@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Diario Alimentare</title>
+<style>
+
+/* ══════════════════════════════════════════════════════════
+   PAGINA  –  Landscape A4, una pagina per giorno
+   ══════════════════════════════════════════════════════════ */
+@page {
+    size: A4 landscape;
+    margin: 10mm 12mm 10mm 12mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8.5pt;
+    color: #111;
+    background: #fff;
+}
+
+/* Ogni giorno = pagina nuova */
+.giorno-page {
+    page-break-after: always;
+    width: 100%;
+}
+.giorno-page:last-child {
+    page-break-after: avoid;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HEADER della pagina
+   ══════════════════════════════════════════════════════════ */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5mm;
+}
+.page-header .brand {
+    font-style: italic;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #333;
+}
+.page-header .data-field {
+    font-size: 10pt;
+    font-weight: bold;
+}
+.page-header .data-value {
+    display: inline-block;
+    min-width: 50mm;
+    border-bottom: 1pt solid #333;
+    margin-left: 4pt;
+    font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TABELLA PRINCIPALE
+   ══════════════════════════════════════════════════════════ */
+.diario-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Colonna etichette (sinistra, testo verticale) */
+.diario-table .col-label {
+    width: 22mm;
+}
+
+/* Le 5 colonne pasto: occupano lo spazio rimanente uguale */
+.diario-table .col-pasto {
+    width: calc((100% - 22mm) / 5);
+}
+
+/* ── Celle generali ── */
+.diario-table td,
+.diario-table th {
+    border: 1pt solid #888;
+    vertical-align: top;
+    padding: 3pt 4pt;
+}
+
+/* ── Intestazione colonne (nomi pasto) ── */
+.diario-table thead th {
+    text-align: center;
+    font-size: 9pt;
+    font-weight: bold;
+    background: #fff;
+    padding: 5pt 3pt;
+    vertical-align: middle;
+    border: 1pt solid #555;
+}
+/* Prima cella header (angolo) */
+.diario-table thead th.corner {
+    background: #fff;
+    border: none;
+}
+
+/* ── Celle etichetta riga (testo verticale) ── */
+.diario-table td.row-label {
+    text-align: center;
+    vertical-align: middle;
+    border: 1pt solid #555;
+    background: #fff;
+    padding: 2pt;
+    width: 22mm;
+}
+.label-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 7.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+    line-height: 1.3;
+    white-space: pre-line;
+    display: inline-block;
+}
+
+/* ── Celle dati ── */
+.diario-table td.cell-data {
+    border: 1pt solid #aaa;
+    min-height: 8mm;
+    font-size: 8.5pt;
+    color: #222;
+    vertical-align: top;
+    padding: 3pt 4pt;
+}
+
+/* Altezze righe per proporzionalità con il form cartaceo */
+.row-ora      td { height: 9mm;  }
+.row-luogo    td { height: 9mm;  }
+.row-cibo     td { height: 18mm; }
+.row-quantita td { height: 14mm; }
+.row-conchi   td { height: 9mm;  }
+.row-prima    td { height: 22mm; }
+.row-dopo     td { height: 22mm; }
+.row-sens     td { height: 14mm; }
+
+/* Linee orizzontali interne stile "carta a righe" nelle celle alte */
+.lined {
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 10pt,
+        #ddd 10pt,
+        #ddd 10.5pt
+    );
+    background-position: 0 13pt;
+}
+
+/* Testo vuoto nelle celle senza dati */
+.cell-empty { color: #ccc; }
+
+/* ══════════════════════════════════════════════════════════
+   NOTA A PIÈ DI PAGINA (scala emoji umore)
+   ══════════════════════════════════════════════════════════ */
+.page-footer {
+    margin-top: 3mm;
+    font-size: 7.5pt;
+    color: #666;
+    text-align: right;
+}
+
+</style>
+</head>
+<body>
+
+{% for giorno in giorni %}
+<div class="giorno-page">
+
+    <!-- ── Header ── -->
+    <div class="page-header">
+        <span class="brand">Diario Alimentare di
+            <span class="data-value">{{ user.get_full_name|default:user.username }}</span>
+        </span>
+        <span class="data-field">DATA
+            <span class="data-value">{{ giorno.data|date:"d / m / Y" }}</span>
+        </span>
+    </div>
+
+    <!-- ── Tabella ── -->
+    <table class="diario-table">
+        <colgroup>
+            <col class="col-label">
+            <col class="col-pasto">
+            <col class="col-pasto">
+            <col class="col-pasto">
+            <col class="col-pasto">
+            <col class="col-pasto">
+        </colgroup>
+
+        <!-- Intestazione colonne: nome del pasto (title) -->
+        <thead>
+            <tr>
+                <th class="corner"></th>
+                {% for pasto in giorno.slot %}
+                <th>{% if pasto %}{{ pasto.title }}{% endif %}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!-- ORA -->
+            <tr class="row-ora">
+                <td class="row-label">
+                    <span class="label-text">ORA</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data">
+                    {% if pasto %}{{ pasto.ora|time:"H:i" }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- LUOGO -->
+            <tr class="row-luogo">
+                <td class="row-label">
+                    <span class="label-text">LUOGO</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data">
+                    {% if pasto %}{{ pasto.luogo }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- COSA MANGIO E COSA BEVO -->
+            <tr class="row-cibo">
+                <td class="row-label">
+                    <span class="label-text">COSA&#10;MANGIO&#10;E COSA&#10;BEVO</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data lined">
+                    {% if pasto %}{{ pasto.cibo }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- QUANTITÀ (porzione o grammi)
+                 Nota: campo non presente nel modello.
+                 La quantità può essere annotata nel campo "cibo".
+                 Riga lasciata libera per appunti manuali. -->
+            <tr class="row-quantita">
+                <td class="row-label">
+                    <span class="label-text">QUANTITÀ&#10;(PORZIONE&#10;O GRAMMI)</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data lined"></td>
+                {% endfor %}
+            </tr>
+
+            <!-- CON CHI -->
+            <tr class="row-conchi">
+                <td class="row-label">
+                    <span class="label-text">CON CHI</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data">
+                    {% if pasto %}{{ pasto.conChi }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- COME MI SENTO PRIMA DEL PASTO E PERCHÉ -->
+            <tr class="row-prima">
+                <td class="row-label">
+                    <span class="label-text">COME MI&#10;SENTO&#10;PRIMA DEL&#10;PASTO E&#10;PERCHÉ</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data lined">
+                    {% if pasto %}{{ pasto.come_sento_prima }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- COME MI SENTO DOPO IL PASTO E PERCHÉ -->
+            <tr class="row-dopo">
+                <td class="row-label">
+                    <span class="label-text">COME MI&#10;SENTO&#10;DOPO IL&#10;PASTO E&#10;PERCHÉ</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data lined">
+                    {% if pasto %}{{ pasto.come_sento_dopo }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <!-- SENSAZIONI FISICHE o Cambiamenti -->
+            <tr class="row-sens">
+                <td class="row-label">
+                    <span class="label-text">SENSAZIONI&#10;FISICHE o&#10;Cambiamenti</span>
+                </td>
+                {% for pasto in giorno.slot %}
+                <td class="cell-data lined">
+                    {% if pasto %}{{ pasto.sensazione }}{% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+
+        </tbody>
+    </table>
+
+    <div class="page-footer">
+        Stampato il {{ data_stampa|date:"d/m/Y" }}
+    </div>
+
+</div><!-- /giorno-page -->
+{% empty %}
+<p style="text-align:center; margin-top:40mm; font-size:12pt; color:#aaa;">
+    Nessun pasto registrato per il periodo selezionato.
+</p>
+{% endfor %}
+
+</body>
+</html>
